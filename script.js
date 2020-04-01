@@ -1,64 +1,75 @@
+  
+function MilitaryResource(type, health, distance) {
+    this.type = type;
+    this.maxHealth = maxHealth = 100;
+    this.health = health;
+    this.maxDistance = maxDistance = 1000;
+    this.distance = distance;
+ }
+ MilitaryResource.prototype.isReadyToMove = function() {
+     return this.health > 0 && this.distance > 0 
+ };
+ MilitaryResource.prototype.isReadyToFight = function (){
+     return this.health > 0;
+ };
+ MilitaryResource.prototype.restore = function (){
+     return this.health < 25;
+ };
+ MilitaryResource.prototype.clone = function (){ 
+     return new MilitaryResource(this.type, this.health, this.distance)
+ } 
+
+
+ function Squad(defaultResources) {
+    this.squad = [];
+    if (defaultResources) this.combineResources(defaultResources);
+ }
+ 
+
+ Squad.prototype.isReadyToMove = function() {
+     return this.squad.some(function(a){
+         return a.health > 0 && a.distance > 0
+     })
+ } ;
+ Squad.prototype.isReadyToFight = function(){
+     return this.squad.some(function(a){
+         return a.health > 0
+     })
+ } ;
+ Squad.prototype.restore = function(){
+     return this.squad.some(function(a){
+         return a.health < 25
+     })
+ };
+Squad.prototype.cloneResource = function(){
+    return new Squad(this.squad);
+}
+Squad.prototype.combineResources = function (resources){
+    this.squad = resources.map(function(a){
+       return Object.assign({}, a)
+    });
+}
+
+var constructor = new MilitaryResource("Andruha", 50, 50)
+var clone = constructor.clone()
+constructor.type = "Garik";
+var squad = new Squad([constructor, clone]);
+console.log(squad)
+console.log(squad.isReadyToMove());
+console.log(squad.isReadyToFight());
+console.log(squad.restore());
+var squadClone = squad.cloneResource();
+console.log(squadClone)
+
+
 function tree(floors, symbol) {
     var arr = Array(floors).fill(" ");
     arr[floors - 1] = symbol;
     console.log(arr.join(""));
      for(var i = 2; i <= floors; i++){
             arr[arr.length] = symbol;
-            arr[floors - i] = symbol;
+             arr[floors - i] = symbol;
             console.log(arr.join(""));
      }
 }
-tree(4, '*');    
-
-
-
-
-
-
-// var obj = {
-//     name: "MyFutureObject",
-//     age: 24,
-//     sex: "male",
-//     getAge: function(){
-//         return this.age;
-//     },
-//     incAge: function(){
-//         return this.age++;
-//     }
-// };
-
-// function User(name, age, exp, sex){
-//     this.exp = exp;
-//     this.name = name;
-//     this.age = age;
-//     this.sex = sex === undefined ? "female" : "male";
-//     this.salary = 500;
-// }
-
-// User.prototype.getAge = function(){
-//     return this.age;
-// }
-
-// User.prototype.incAge = function(){
-//     return this.age++;
-// }
-
-// User.prototype.incSalary = function(bonusesAmount){
-//     var bonuses = Number(bonusesAmount) || 0;
-//     return (this.salary += 500 + bonuses + (this.exp / 100) * bonuses);
-// }
-
-// var usersArray = [];
-
-// for(var i = 0; i < 5; i++ ){
-//     usersArray.push(new User("User " + i, 20 + i, i + 1));
-// }
-
-// for( var i = 0; i < usersArray.length; i++){
-//     usersArray[i].incAge();
-//     usersArray[i].incSalary(200);
-// }
-
-// console.log(usersArray);
-
-
+tree(10, '*'); 
